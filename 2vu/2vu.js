@@ -73,7 +73,7 @@ function TwoVuBetter() {
   }
 
   const storeCurrentTime = () => {
-    if (self.player.paused()) {
+    if (self.player.paused() || self.player.currentTime() <= 1) {
       return;
     }
 
@@ -121,6 +121,10 @@ function TwoVuBetter() {
     }
   }
 
+  const onDurationChanged = () => {
+    setCurrentTimeFromStorage();
+  }
+
   const onLoaded = () => {
     // @ts-ignore
     if ((new Date() - window.twoVuLoaded) < 500) {
@@ -138,7 +142,7 @@ function TwoVuBetter() {
     player.on('ended', onVideoEnded);
     setPlayBackRateFromStorage();
     player.play();
-    setCurrentTimeFromStorage();
+    player.on('durationchange', onDurationChanged);
     setInterval(storeCurrentTime, 1000);
 
     getNextLectureButton().addEventListener('click', onNextButtonClicked);
