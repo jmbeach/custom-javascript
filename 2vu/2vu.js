@@ -22,11 +22,11 @@ function TwoVuBetter() {
   }
 
   const getNextLectureButton = () => {
-    return document.querySelector('.styles__Arrow-sc-1vkc84i-0.bLBPzq');
+    return document.querySelectorAll('.styles__Arrow-sc-1vkc84i-0')[1];
   }
 
   const getPrevLectureButton = () => {
-    return document.querySelector('.styles__Arrow-sc-1vkc84i-0.eSMGQT');
+    return document.querySelector('.styles__Arrow-sc-1vkc84i-0');
   }
 
   const getLectureButtons = () => {
@@ -84,6 +84,16 @@ function TwoVuBetter() {
     localStorage.setItem(STORAGE_PLAYBACK_RATE, self.player.playbackRate().toString());
   }
 
+  const onVideoEnded = () => {
+    if (parseInt(getCurrentSection()) >= getLectureButtons().length) {
+      return;
+    }
+
+    // auto-advance
+    // @ts-ignore
+    getNextLectureButton().click();
+  }
+
   const onPrevButtonClicked = () => {
     init();
   }
@@ -98,7 +108,7 @@ function TwoVuBetter() {
 
   const setCurrentTimeFromStorage = () => {
     const storedCurrentTime = localStorage.getItem(getStorageKeyCurrentTime());
-    if (storeCurrentTime) {
+    if (storedCurrentTime && parseFloat(storedCurrentTime) < self.player.duration()) {
       self.player.currentTime(parseFloat(storedCurrentTime));
     }
   }
@@ -124,6 +134,7 @@ function TwoVuBetter() {
     addSkipBackwardButton();
     addSkipForwardButton();
     player.on('ratechange', onRateChange);
+    player.on('ended', onVideoEnded);
     setPlayBackRateFromStorage();
     player.play();
     setCurrentTimeFromStorage();
