@@ -22,15 +22,15 @@ function TwoVuBetter() {
   }
 
   const getNextLectureButton = () => {
-    return document.querySelectorAll('.styles__Arrow-sc-1vkc84i-0')[1];
+    return getWindow().document.querySelectorAll('.styles__Arrow-sc-1vkc84i-0')[1];
   }
 
   const getPrevLectureButton = () => {
-    return document.querySelector('.styles__Arrow-sc-1vkc84i-0');
+    return getWindow().document.querySelector('.styles__Arrow-sc-1vkc84i-0');
   }
 
   const getLectureButtons = () => {
-    return document.querySelectorAll('.button.button--hover.styles__NavigationItemButton-v6r7uk-3.ijvtUw');
+    return getWindow().document.querySelectorAll('.button.button--hover.styles__NavigationItemButton-v6r7uk-3.ijvtUw');
   }
 
   const getCurrentSection = () => {
@@ -90,9 +90,18 @@ function TwoVuBetter() {
     }
 
     // auto-advance
-    const event = getWindow().document.createEvent('Events');
-    event.initEvent('click', true, false);
-    getNextLectureButton().dispatchEvent(event);
+    // wait for arrow to enable
+    const isEnabledTimer = setInterval(() => {
+      // @ts-ignore
+      if (getNextLectureButton().disabled) {
+        return;
+      }
+
+      clearInterval(isEnabledTimer);
+      const event = getWindow().document.createEvent('Events');
+      event.initEvent('click', true, false);
+      getNextLectureButton().dispatchEvent(event);
+    }, 100);
   }
 
   const onVideoChanged = () => {
