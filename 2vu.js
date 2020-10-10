@@ -26,6 +26,13 @@ function TwoVuBetter() {
   const onRateChange = () => {
     localStorage.setItem(STORAGE_PLAYBACK_RATE, self.player.playbackRate().toString());
   }
+  
+  const setCurrentTimeFromStorage = () => {
+    const storedCurrentTime = localStorage.getItem(getStorageKeyCurrentTime());
+    if (storeCurrentTime) {
+      self.player.currentTime(parseFloat(storedCurrentTime));
+    }
+  }
 
   const setPlayBackRateFromStorage = () => {
     const storedPlaybackRate = localStorage.getItem(STORAGE_PLAYBACK_RATE);
@@ -39,6 +46,8 @@ function TwoVuBetter() {
     self.player = player;
     player.on('ratechange', onRateChange);
     setPlayBackRateFromStorage();
+    player.play();
+    setCurrentTimeFromStorage();
     setInterval(storeCurrentTime, 1000);
   }
   
