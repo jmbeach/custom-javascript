@@ -95,16 +95,10 @@ function TwoVuBetter() {
     getNextLectureButton().dispatchEvent(event);
   }
 
-  const onPrevButtonClicked = () => {
-    init();
-  }
-
-  const onNextButtonClicked = () => {
-    init();
-  }
-
-  const onLectureButtonClicked = () => {
-    init();
+  const onVideoChanged = () => {
+    setTimeout(() => {
+      init();
+    }, 500);
   }
 
   const setCurrentTimeFromStorage = () => {
@@ -131,6 +125,26 @@ function TwoVuBetter() {
       return;
     }
 
+    // do only once
+    // @ts-ignore
+    if (!window.twoVuLoaded) {
+      var observer = new MutationObserver((mutationList) => {
+        if (mutationList.length !== 2
+          || mutationList[0].type !== 'childList'
+          || mutationList[1].type !== 'childList'
+          // @ts-ignore
+          || mutationList[0].target.className !== 'card__body') {
+          return;
+        }
+  
+        onVideoChanged();
+      });
+  
+      observer.observe(document.querySelectorAll(
+        '[class*=styles__Player] [class*=ContentWrapper] [class*=ElementCardWrapper] [class*=HarmonyCardStyles] .card__body')[1],
+        {childList: true});
+    }
+
     // @ts-ignore
     window.twoVuLoaded = new Date();
     addCustomCss();
@@ -144,10 +158,6 @@ function TwoVuBetter() {
     player.play();
     player.on('durationchange', onDurationChanged);
     setInterval(storeCurrentTime, 1000);
-
-    getNextLectureButton().addEventListener('click', onNextButtonClicked);
-    getPrevLectureButton().addEventListener('click', onPrevButtonClicked);
-    getLectureButtons().forEach(b => b.addEventListener('click', onLectureButtonClicked));
   }
 
   const init = () => {
