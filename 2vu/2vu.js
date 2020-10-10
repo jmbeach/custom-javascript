@@ -21,8 +21,25 @@ function TwoVuBetter() {
     getWindow().document.body.prepend(styleTag);
   }
 
+  const getNextLectureButton = () => {
+    return document.querySelector('.styles__Arrow-sc-1vkc84i-0.bLBPzq');
+  }
+
+  const getPrevLectureButton = () => {
+    return document.querySelector('.styles__Arrow-sc-1vkc84i-0.eSMGQT');
+  }
+
+  const getLectureButtons = () => {
+    return document.querySelectorAll('.button.button--hover.styles__NavigationItemButton-v6r7uk-3.ijvtUw');
+  }
+
+  const getCurrentSection = () => {
+    // @ts-ignore
+    return getWindow().document.querySelector('button.button--primary.styles__NavigationItemButton-v6r7uk-3.ijvtUw').innerText;
+  }
+
   const getStorageKeyCurrentTime = () => {
-    return STORAGE_CURRENT_TIME + window.location.href;
+    return STORAGE_CURRENT_TIME + window.location.href + '_' + getCurrentSection();
   }
 
   const addSkipForwardButton = () => {
@@ -67,6 +84,18 @@ function TwoVuBetter() {
     localStorage.setItem(STORAGE_PLAYBACK_RATE, self.player.playbackRate().toString());
   }
 
+  const onPrevButtonClicked = () => {
+    init();
+  }
+
+  const onNextButtonClicked = () => {
+    init();
+  }
+
+  const onLectureButtonClicked = () => {
+    init();
+  }
+
   const setCurrentTimeFromStorage = () => {
     const storedCurrentTime = localStorage.getItem(getStorageKeyCurrentTime());
     if (storeCurrentTime) {
@@ -83,12 +112,12 @@ function TwoVuBetter() {
 
   const onLoaded = () => {
     // @ts-ignore
-    if (window.twoVuLoaded) {
+    if ((new Date() - window.twoVuLoaded) < 500) {
       return;
     }
 
     // @ts-ignore
-    window.twoVuLoaded = true;
+    window.twoVuLoaded = new Date();
     addCustomCss();
     const player = self.vjs('vjs-player');
     self.player = player;
@@ -99,25 +128,34 @@ function TwoVuBetter() {
     player.play();
     setCurrentTimeFromStorage();
     setInterval(storeCurrentTime, 1000);
+
+    getNextLectureButton().addEventListener('click', onNextButtonClicked);
+    getPrevLectureButton().addEventListener('click', onPrevButtonClicked);
+    getLectureButtons().forEach(b => b.addEventListener('click', onLectureButtonClicked));
   }
 
-  const loadTimer = setInterval(() => {
-    if (typeof self.vjs === 'undefined') {
-      // @ts-ignore
-      self.vjs = getWindow().videojs;
+  const init = () => {
+    self.player = undefined;
+    const loadTimer = setInterval(() => {
       if (typeof self.vjs === 'undefined') {
+        // @ts-ignore
+        self.vjs = getWindow().videojs;
+        if (typeof self.vjs === 'undefined') {
+          return;
+        }
+      }
+  
+      // the player itself isn't loaded yet
+      if (!getWindow().document.getElementById('vjs-player')) {
         return;
       }
-    }
+  
+      clearInterval(loadTimer);
+      onLoaded();
+    }, 500);
+  }
 
-    // the player itself isn't loaded yet
-    if (!getWindow().document.getElementById('vjs-player')) {
-      return;
-    }
-
-    clearInterval(loadTimer);
-    onLoaded();
-  }, 500);
+  init();
 }
 
 // @ts-ignore
