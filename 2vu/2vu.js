@@ -90,8 +90,9 @@ function TwoVuBetter() {
     }
 
     // auto-advance
-    // @ts-ignore
-    getNextLectureButton().click();
+    const event = getWindow().document.createEvent('Events');
+    event.initEvent('click', true, false);
+    getNextLectureButton().dispatchEvent(event);
   }
 
   const onPrevButtonClicked = () => {
