@@ -103,7 +103,9 @@ function TwoVuBetter() {
 
   const setCurrentTimeFromStorage = () => {
     const storedCurrentTime = localStorage.getItem(getStorageKeyCurrentTime());
-    if (storedCurrentTime && parseFloat(storedCurrentTime) < self.player.duration()) {
+
+    // only set if not at the very end of the video
+    if (storedCurrentTime && self.player.duration() - parseFloat(storedCurrentTime) >= 5) {
       self.player.currentTime(parseFloat(storedCurrentTime));
     }
   }
