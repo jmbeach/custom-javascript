@@ -1,0 +1,11 @@
+{
+  "name": "custom-javascript",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/jmbeach/custom-javascript.git",
+  "author": "jmbeach <jaredbeachdesign@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/video.js": "^7.3.11"
+  }
+}

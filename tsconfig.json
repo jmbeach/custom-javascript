@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "checkJs": true,
+    "module": "ESNext",
+    "moduleResolution": "classic",
+    "outDir": "lib",
+    "paths": {
+      "*": [
+        "./@types/*",
+        "node_modules/@types/*"
+      ]
+    },
+    "target": "ESNext",
+    "typeRoots": [
+      "node_modules/@types",
+      "@types",
+    ]
+  },
+  "include": [
+    "./**/*"
+  ]
+}
