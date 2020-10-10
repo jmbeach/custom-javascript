@@ -1,0 +1,17 @@
+/* override video player width */
+.diIHwN {
+  width: 90%;
+  max-width: none;
+}
+
+.video-js .vjs-control.vjs-button.vjs-control-skip-forward::before {
+  content: "⏩️ 15s";
+  font-size: 1em;
+  margin-top: 0.7em;
+}
+
+.video-js .vjs-control.vjs-button.vjs-control-skip-backward::before {
+  content: "15s ⏪️";
+  font-size: 1em;
+  margin-top: 0.7em;
+}
