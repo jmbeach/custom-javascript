@@ -25,10 +25,6 @@ function TwoVuBetter() {
     return getWindow().document.querySelectorAll('.styles__Arrow-sc-1vkc84i-0')[1];
   }
 
-  const getPrevLectureButton = () => {
-    return getWindow().document.querySelector('.styles__Arrow-sc-1vkc84i-0');
-  }
-
   const getLectureButtons = () => {
     return getWindow().document.querySelectorAll('.button.button--hover.styles__NavigationItemButton-v6r7uk-3.ijvtUw');
   }
