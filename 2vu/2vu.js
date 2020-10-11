@@ -34,6 +34,11 @@ function TwoVuBetter() {
   }
 
   const getCurrentSection = () => {
+    // happens when there's only one video
+    if (!getLectureButtons().length) {
+      return '';
+    }
+
     // @ts-ignore
     return getWindow().document.querySelector('button.button--primary.styles__NavigationItemButton-v6r7uk-3.ijvtUw').innerText;
   }
