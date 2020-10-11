@@ -151,9 +151,14 @@ function TwoVuBetter() {
         onVideoChanged();
       });
   
-      observer.observe(document.querySelectorAll(
-        '[class*=styles__Player] [class*=ContentWrapper] [class*=ElementCardWrapper] [class*=HarmonyCardStyles] .card__body')[1],
-        {childList: true});
+      try {
+        observer.observe(document.querySelectorAll(
+          '[class*=styles__Player] [class*=ContentWrapper] [class*=ElementCardWrapper] [class*=HarmonyCardStyles] .card__body')[1],
+          {childList: true});
+      }
+      catch {
+        // let this fail when there's only one video
+      }
     }
 
     // @ts-ignore
