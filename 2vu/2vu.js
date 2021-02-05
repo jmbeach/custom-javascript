@@ -17,8 +17,9 @@ function TwoVuBetter() {
   const addCustomCss = () => {
     const styleTag = getWindow().document.createElement('link');
     styleTag.rel = 'stylesheet';
-    styleTag.href = 'https://gistcdn.githack.com/jmbeach/3b73fc8a33565789ee1b73d1a68276be/raw/1e29e94d73faf4ffd40db5ad06d2b23460c6a623/2vu.css';
+    styleTag.href = 'https://gistcdn.githack.com/jmbeach/3b73fc8a33565789ee1b73d1a68276be/raw/3fa09484bcb32dcc4f776871fb8000296ff4e527/2vu.css';
     getWindow().document.body.prepend(styleTag);
+    window.document.body.prepend(styleTag);
   }
 
   const getNextLectureButton = () => {
