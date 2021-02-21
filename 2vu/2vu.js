@@ -82,6 +82,10 @@ function TwoVuBetter() {
     localStorage.setItem(getStorageKeyCurrentTime(), self.player.currentTime().toString());
   }
 
+  const getCourseCards = () => {
+    return document.querySelector('div._3N6Oy._38vEw.k83C2').children;
+  }
+
   const onRateChange = () => {
     localStorage.setItem(STORAGE_PLAYBACK_RATE, self.player.playbackRate().toString());
   }
@@ -178,7 +182,7 @@ function TwoVuBetter() {
     setInterval(storeCurrentTime, 1000);
   }
 
-  const init = () => {
+  const initVideoPage = () => {
     self.player = undefined;
     const loadTimer = setInterval(() => {
       if (typeof self.vjs === 'undefined') {
@@ -197,6 +201,53 @@ function TwoVuBetter() {
       clearInterval(loadTimer);
       onLoaded();
     }, 500);
+  }
+
+  const onDashboardLoaded = _ => {
+    fetch('https://2vu.engineeringonline.vanderbilt.edu/graphql', {
+      method: 'POST',
+      headers: {
+        'apollographql-client-version': '0.98.2',
+        'apollographql-client-name': 'dashboard',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "operationName": "CourseworkForStudentSection",
+        "variables": {},
+        "query": "fragment DashboardStudyListTopicFragment on StudyListTopic {\n  moduleUuid\n  topicUuid\n  name\n  moduleOrder\n  moduleOrderLabel\n  order\n  orderLabel\n  url\n  __typename\n}\n\nquery CourseworkForStudentSection {\n  sections(filterByIsLive: true, ignoreMismatchedSectionEntitlements: true) {\n    name\n    uuid\n    courseOutline {\n      modules {\n        uuid\n        name\n        order\n        orderLabel\n        videoDurationSeconds\n        topics {\n          uuid\n          name\n          order\n          orderLabel\n          typeLabel\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    topicCompletions {\n      userUuid\n      topicUuid\n      __typename\n    }\n    dueDates {\n      topicUuid\n      dueDate\n      __typename\n    }\n    studyListTopics {\n      ...DashboardStudyListTopicFragment\n      __typename\n    }\n    __typename\n  }\n}\n"
+      })
+    }).then(res => {
+      return res.json()
+    }).then(data => {
+      for (const section of data.data.sections) {
+        for (const module of section.courseOutline.modules) {
+          const match = document.querySelector(`a[href*="${module.uuid}"]`);
+          if (match) {
+            match.innerHTML = `${module.orderLabel}: ${match.innerHTML}`;
+          }
+        }
+      }
+    }).catch(err => {
+      throw err;
+    })
+  }
+
+  const initDashboard = () => {
+    const loadTimer = setInterval(() => {
+      const cards = getCourseCards();
+      if (cards && cards.length) {
+        clearInterval(loadTimer);
+        onDashboardLoaded(cards);
+      }
+    }, 250)
+  }
+
+  const init = () => {
+    if (document.location.href.endsWith('dashboard')) {
+      initDashboard();
+    } else {
+      initVideoPage();
+    }
   }
 
   init();
