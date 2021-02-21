@@ -224,6 +224,16 @@ function TwoVuBetter() {
           const match = document.querySelector(`a[href*="${module.uuid}"]`);
           if (match) {
             match.innerHTML = `${module.orderLabel}: ${match.innerHTML}`;
+            const card = match.parentElement.parentElement.parentElement;
+            const h2 = card.querySelector('h2');
+            // for some reason the last number after the dash isn't in the page
+            const nameParts = section.name.split('-');
+            const shortName = `${nameParts[0]}-${nameParts[1]}`;
+            h2.innerHTML = h2.innerHTML.replace(shortName, '');
+            const smallName = document.createElement('span');
+            smallName.innerHTML = shortName;
+            smallName.setAttribute('style', 'font-size: 0.8rem; display: block;');
+            h2.appendChild(smallName)
           }
         }
       }
